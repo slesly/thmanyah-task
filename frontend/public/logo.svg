@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="160" height="36" viewBox="0 0 160 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect x="2" y="2" width="32" height="32" rx="8" fill="#111827"/>
+  <path d="M12 24l5-10 5 10h-3l-2-4-2 4h-3z" fill="#ffffff"/>
+  <text x="44" y="24" font-family="Inter, Arial, sans-serif" font-size="18" font-weight="700" fill="#111827">Thmanyah</text>
+</svg>
