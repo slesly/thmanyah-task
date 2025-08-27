@@ -1,15 +1,28 @@
 import type { Metadata } from 'next'
-import { Inter } from 'next/font/google'
 import './globals.css'
-
-const inter = Inter({ subsets: ['latin'] })
+import './fonts.css'
 
 export const metadata: Metadata = {
   title: 'Thmanyah - iTunes Podcast Search',
-  description: 'Search and discover podcasts from iTunes',
+  description: 'Search and discover podcasts from iTunes with a beautiful light theme interface',
+  keywords: 'podcasts, iTunes, search, Arabic, بودكاست, بحث',
+  authors: [{ name: 'Thmanyah Team' }],
+  viewport: 'width=device-width, initial-scale=1.0, viewport-fit=cover',
+  themeColor: '#ffffff',
   icons: {
     icon: '/favicon.ico',
     apple: '/apple-touch-icon.png',
+  },
+  openGraph: {
+    title: 'Thmanyah - iTunes Podcast Search',
+    description: 'Search and discover podcasts from iTunes with a beautiful light theme interface',
+    type: 'website',
+    locale: 'ar_SA',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Thmanyah - iTunes Podcast Search',
+    description: 'Search and discover podcasts from iTunes with a beautiful light theme interface',
   },
 }
 
@@ -19,8 +32,15 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en">
-      <body className={inter.className}>{children}</body>
+    <html lang="ar" dir="rtl">
+      <head>
+        <meta name="color-scheme" content="light" />
+      </head>
+      <body className="font-ibm-plex-sans-arabic antialiased">
+        <div id="__next">
+          {children}
+        </div>
+      </body>
     </html>
   )
 } 

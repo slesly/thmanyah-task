@@ -1,9 +1,7 @@
-'use client'
+import { Episode } from '../types/podcast'
 
-import { Podcast } from '../types/podcast'
-
-interface PodcastCardProps {
-  podcast: Podcast
+interface EpisodeCardProps {
+  episode: Episode
 }
 
 function getAccentColor(name: string): string {
@@ -22,10 +20,21 @@ function getAccentColor(name: string): string {
   return colors[index]
 }
 
-export default function PodcastCard({ podcast }: PodcastCardProps) {
-  const accentColor = getAccentColor(podcast.trackName)
+export default function EpisodeCard({ episode }: EpisodeCardProps) {
+  const accentColor = getAccentColor(episode.trackName)
   const bgAccentColor = accentColor.replace('text-', 'bg-')
   
+  const formatDuration = (seconds?: number): string => {
+    if (!seconds) return ''
+    const hours = Math.floor(seconds / 3600)
+    const minutes = Math.floor((seconds % 3600) / 60)
+    
+    if (hours > 0) {
+      return `${hours}:${minutes.toString().padStart(2, '0')}:00`
+    }
+    return `${minutes}:00`
+  }
+
   const formatDate = (dateString?: string): string => {
     if (!dateString) return ''
     return new Date(dateString).toLocaleDateString('ar-SA', {
@@ -42,10 +51,10 @@ export default function PodcastCard({ podcast }: PodcastCardProps) {
       
       {/* Artwork */}
       <div className="relative aspect-square bg-light-100">
-        {podcast.artworkUrl100 ? (
+        {episode.artworkUrl100 ? (
           <img
-            src={podcast.artworkUrl100.replace('100x100', '600x600')}
-            alt={podcast.trackName}
+            src={episode.artworkUrl100.replace('100x100', '600x600')}
+            alt={episode.trackName}
             className="w-full h-full object-cover"
             loading="lazy"
           />
@@ -69,60 +78,65 @@ export default function PodcastCard({ podcast }: PodcastCardProps) {
 
       {/* Content */}
       <div className="p-4">
-        {/* Podcast title */}
+        {/* Episode title */}
         <h3 className="font-semibold text-card-foreground mb-2 line-clamp-2 group-hover:text-accent-blue transition-colors duration-200">
-          {podcast.trackName}
+          {episode.trackName}
         </h3>
         
-        {/* Artist */}
-        <p className="text-light-500 text-sm mb-3 line-clamp-1">
-          {podcast.artistName}
+        {/* Podcast name */}
+        <p className="text-light-500 text-sm mb-2 line-clamp-1">
+          {episode.collectionName}
         </p>
         
-        {/* Genre and track count */}
+        {/* Artist */}
+        <p className="text-light-400 text-sm mb-3 line-clamp-1">
+          {episode.artistName}
+        </p>
+        
+        {/* Episode details */}
         <div className="flex items-center justify-between text-xs text-light-400 mb-3">
-          {podcast.primaryGenreName && (
-            <span>{podcast.primaryGenreName}</span>
+          {episode.episodeNumber && (
+            <span>الحلقة {episode.episodeNumber}</span>
           )}
-          {podcast.trackCount && (
-            <span>{podcast.trackCount} حلقة</span>
+          {episode.episodeLength && (
+            <span>{formatDuration(episode.episodeLength)}</span>
           )}
         </div>
         
         {/* Release date */}
-        {podcast.releaseDate && (
+        {episode.releaseDate && (
           <p className="text-light-400 text-xs mb-3">
-            {formatDate(podcast.releaseDate)}
+            {formatDate(episode.releaseDate)}
           </p>
         )}
         
         {/* Description preview */}
-        {podcast.description && (
+        {episode.description && (
           <p className="text-light-500 text-sm line-clamp-2 mb-4">
-            {podcast.description.replace(/<[^>]*>/g, '')}
+            {episode.description.replace(/<[^>]*>/g, '')}
           </p>
         )}
         
         {/* Links */}
         <div className="flex items-center gap-2">
-          {podcast.trackViewUrl && (
+          {episode.trackViewUrl && (
             <a
-              href={podcast.trackViewUrl}
+              href={episode.trackViewUrl}
               target="_blank"
               rel="noopener noreferrer"
               className="text-accent-blue hover:text-accent-blue/80 text-sm font-medium transition-colors duration-200"
             >
-              عرض البودكاست
+              استمع الآن
             </a>
           )}
-          {podcast.feedUrl && (
+          {episode.collectionViewUrl && (
             <a
-              href={podcast.feedUrl}
+              href={episode.collectionViewUrl}
               target="_blank"
               rel="noopener noreferrer"
               className="text-light-500 hover:text-light-600 text-sm transition-colors duration-200"
             >
-              RSS Feed
+              عرض البودكاست
             </a>
           )}
         </div>
@@ -132,4 +146,4 @@ export default function PodcastCard({ podcast }: PodcastCardProps) {
       <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-gradient-primary opacity-0 group-hover:opacity-100 transition-opacity duration-200"></div>
     </div>
   )
-} 
+}
