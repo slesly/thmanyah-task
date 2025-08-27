@@ -1,0 +1,20 @@
+version: 1
+frontend:
+  phases:
+    preBuild:
+      commands:
+        - cd frontend
+        - npm ci
+    build:
+      commands:
+        - npm run build
+  artifacts:
+    baseDirectory: frontend/.next
+    files:
+      - '**/*'
+      - ../public/**/*
+  cache:
+    paths:
+      - frontend/.next/cache/**/*
+      - frontend/.npm/**/*
+      - frontend/node_modules/**/*
