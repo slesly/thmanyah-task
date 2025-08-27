@@ -9,11 +9,11 @@ frontend:
       commands:
         - npm run build
   artifacts:
-    baseDirectory: .next
+    baseDirectory: frontend/.next
     files:
       - '**/*'
-      - ../public/**/*
-      - test.html
+      - frontend/public/**/*
+      - frontend/test.html
   cache:
     paths:
       - frontend/.next/cache/**/*
