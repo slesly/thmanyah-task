@@ -44,13 +44,22 @@ export default function EpisodeCard({ episode }: EpisodeCardProps) {
     })
   }
 
+  const handleCardClick = () => {
+    if (episode.trackViewUrl) {
+      window.open(episode.trackViewUrl, '_blank', 'noopener,noreferrer')
+    }
+  }
+
   return (
     <div className="group relative bg-card border border-border rounded-lg overflow-hidden card-hover shadow-sm">
       {/* Accent indicator */}
       <div className={`absolute top-0 left-0 w-1 h-full ${bgAccentColor} opacity-0 group-hover:opacity-100 transition-opacity duration-200`}></div>
       
       {/* Artwork */}
-      <div className="relative aspect-square bg-light-100">
+      <div 
+        className="relative aspect-square bg-light-100 cursor-pointer"
+        onClick={handleCardClick}
+      >
         {episode.artworkUrl100 ? (
           <img
             src={episode.artworkUrl100.replace('100x100', '600x600')}
@@ -79,7 +88,10 @@ export default function EpisodeCard({ episode }: EpisodeCardProps) {
       {/* Content */}
       <div className="p-4">
         {/* Episode title */}
-        <h3 className="font-semibold text-card-foreground mb-2 line-clamp-2 group-hover:text-accent-blue transition-colors duration-200">
+        <h3 
+          className="font-semibold text-card-foreground mb-2 line-clamp-2 group-hover:text-accent-blue transition-colors duration-200 cursor-pointer"
+          onClick={handleCardClick}
+        >
           {episode.trackName}
         </h3>
         

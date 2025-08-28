@@ -1,6 +1,22 @@
 import { SearchResult, PodbaySearchResponse } from '../types/podcast'
 
-const API_BASE_URL = 'http://localhost:3001'
+// API Configuration with fallbacks
+const getApiBaseUrl = () => {
+  // Priority order: environment variable > production URL > localhost
+  if (process.env.NEXT_PUBLIC_API_URL) {
+    return process.env.NEXT_PUBLIC_API_URL
+  }
+
+  // Check if we're in production (Amplify)
+  if (typeof window !== 'undefined' && window.location.hostname.includes('amplifyapp.com')) {
+    return 'https://agd9mkwapi.us-east-1.awsapprunner.com'
+  }
+
+  // Default to localhost for development
+  return 'http://localhost:3001'
+}
+
+const API_BASE_URL = getApiBaseUrl()
 
 // Simple in-memory cache
 const searchCache = new Map<string, { data: SearchResult[], timestamp: number }>()

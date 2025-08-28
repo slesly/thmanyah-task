@@ -4,6 +4,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { SearchController } from './search/search.controller';
 import { SearchService } from './search/search.service';
 import { Podcast } from './entities/podcast.entity';
+import { Episode } from './entities/episode.entity';
 
 @Module({
   imports: [
@@ -17,10 +18,10 @@ import { Podcast } from './entities/podcast.entity';
       username: process.env.DB_USERNAME || 'postgres',
       password: process.env.DB_PASSWORD || 'password',
       database: process.env.DB_NAME || 'thmanyah_db',
-      entities: [Podcast],
+      entities: [Podcast, Episode],
       synchronize: true, // Only for development
     }),
-    TypeOrmModule.forFeature([Podcast]),
+    TypeOrmModule.forFeature([Podcast, Episode]),
   ],
   controllers: [SearchController],
   providers: [SearchService],

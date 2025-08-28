@@ -1,5 +1,5 @@
 import { Controller, Get, Query, HttpException, HttpStatus } from '@nestjs/common';
-import { SearchService } from './search.service';
+import { SearchService, SearchResponse } from './search.service';
 import { Podcast } from '../entities/podcast.entity';
 
 @Controller('api/search')
@@ -7,7 +7,7 @@ export class SearchController {
   constructor(private readonly searchService: SearchService) {}
 
   @Get()
-  async searchPodcasts(@Query('q') searchTerm: string): Promise<Podcast[]> {
+  async searchPodcasts(@Query('q') searchTerm: string): Promise<SearchResponse> {
     if (!searchTerm || searchTerm.trim() === '') {
       throw new HttpException(
         'Search term is required',
@@ -26,7 +26,7 @@ export class SearchController {
   }
 
   @Get('recent')
-  async getRecentSearches(): Promise<Podcast[]> {
+  async getRecentSearches(): Promise<SearchResponse> {
     try {
       return await this.searchService.getRecentSearches();
     } catch (error) {
@@ -38,7 +38,7 @@ export class SearchController {
   }
 
   @Get('by-term')
-  async getPodcastsBySearchTerm(@Query('q') searchTerm: string): Promise<Podcast[]> {
+  async getPodcastsBySearchTerm(@Query('q') searchTerm: string): Promise<SearchResponse> {
     if (!searchTerm || searchTerm.trim() === '') {
       throw new HttpException(
         'Search term is required',

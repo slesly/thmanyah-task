@@ -4,6 +4,7 @@ import { Podcast } from '../types/podcast'
 
 interface PodcastCardProps {
   podcast: Podcast
+  variant?: 'default' | 'compact'
 }
 
 function getAccentColor(name: string): string {
@@ -22,7 +23,7 @@ function getAccentColor(name: string): string {
   return colors[index]
 }
 
-export default function PodcastCard({ podcast }: PodcastCardProps) {
+export default function PodcastCard({ podcast, variant = 'default' }: PodcastCardProps) {
   const accentColor = getAccentColor(podcast.trackName)
   const bgAccentColor = accentColor.replace('text-', 'bg-')
   
@@ -35,13 +36,87 @@ export default function PodcastCard({ podcast }: PodcastCardProps) {
     })
   }
 
+  const handleCardClick = () => {
+    if (podcast.trackViewUrl) {
+      window.open(podcast.trackViewUrl, '_blank', 'noopener,noreferrer')
+    }
+  }
+
+  if (variant === 'compact') {
+    return (
+      <div 
+        className="group relative bg-card border border-border rounded-lg overflow-hidden card-hover shadow-sm cursor-pointer"
+        onClick={handleCardClick}
+      >
+        {/* Accent indicator */}
+        <div className={`absolute top-0 left-0 w-1 h-full ${bgAccentColor} opacity-0 group-hover:opacity-100 transition-opacity duration-200`}></div>
+        
+        {/* Artwork */}
+        <div className="relative aspect-square bg-light-100">
+          {podcast.artworkUrl100 ? (
+            <img
+              src={podcast.artworkUrl100.replace('100x100', '600x600')}
+              alt={podcast.trackName}
+              className="w-full h-full object-cover"
+              loading="lazy"
+            />
+          ) : (
+            <div className="w-full h-full flex items-center justify-center">
+              <svg className="w-8 h-8 text-light-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3" />
+              </svg>
+            </div>
+          )}
+          
+          {/* Hover overlay */}
+          <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex items-center justify-center">
+            <div className="w-8 h-8 bg-white/90 rounded-full flex items-center justify-center">
+              <svg className="w-4 h-4 text-accent-blue" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M8 5v14l11-7z" />
+              </svg>
+            </div>
+          </div>
+        </div>
+
+        {/* Content */}
+        <div className="p-3">
+          {/* Podcast title */}
+          <h3 className="font-semibold text-card-foreground mb-1 line-clamp-2 group-hover:text-accent-blue transition-colors duration-200 text-sm">
+            {podcast.trackName}
+          </h3>
+          
+          {/* Artist */}
+          <p className="text-light-500 text-xs mb-2 line-clamp-1">
+            {podcast.artistName}
+          </p>
+          
+          {/* Genre and track count */}
+          <div className="flex items-center justify-between text-xs text-light-400">
+            {podcast.primaryGenreName && (
+              <span className="line-clamp-1">{podcast.primaryGenreName}</span>
+            )}
+            {podcast.trackCount && (
+              <span>{podcast.trackCount} حلقة</span>
+            )}
+          </div>
+        </div>
+        
+        {/* Gradient bottom border on hover */}
+        <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-gradient-primary opacity-0 group-hover:opacity-100 transition-opacity duration-200"></div>
+      </div>
+    )
+  }
+
   return (
     <div className="group relative bg-card border border-border rounded-lg overflow-hidden card-hover shadow-sm">
       {/* Accent indicator */}
       <div className={`absolute top-0 left-0 w-1 h-full ${bgAccentColor} opacity-0 group-hover:opacity-100 transition-opacity duration-200`}></div>
       
       {/* Artwork */}
-      <div className="relative aspect-square bg-light-100">
+      <div 
+        className="relative aspect-square bg-light-100 cursor-pointer"
+        onClick={handleCardClick}
+      >
         {podcast.artworkUrl100 ? (
           <img
             src={podcast.artworkUrl100.replace('100x100', '600x600')}
@@ -70,7 +145,10 @@ export default function PodcastCard({ podcast }: PodcastCardProps) {
       {/* Content */}
       <div className="p-4">
         {/* Podcast title */}
-        <h3 className="font-semibold text-card-foreground mb-2 line-clamp-2 group-hover:text-accent-blue transition-colors duration-200">
+        <h3 
+          className="font-semibold text-card-foreground mb-2 line-clamp-2 group-hover:text-accent-blue transition-colors duration-200 cursor-pointer"
+          onClick={handleCardClick}
+        >
           {podcast.trackName}
         </h3>
         

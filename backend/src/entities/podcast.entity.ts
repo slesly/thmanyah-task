@@ -5,13 +5,13 @@ export class Podcast {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column()
+  @Column({ type: 'bigint' })
   trackId: number;
 
-  @Column()
+  @Column({ nullable: true })
   trackName: string;
 
-  @Column()
+  @Column({ nullable: true })
   artistName: string;
 
   @Column({ nullable: true })
@@ -29,7 +29,7 @@ export class Podcast {
   @Column({ nullable: true })
   releaseDate: string;
 
-  @Column({ nullable: true })
+  @Column({ type: 'int', nullable: true })
   trackCount: number;
 
   @Column({ nullable: true })
@@ -53,10 +53,10 @@ export class Podcast {
   @Column({ nullable: true })
   previewUrl: string;
 
-  @Column({ type: 'decimal', precision: 10, scale: 2, nullable: true })
+  @Column({ type: 'float', nullable: true })
   trackPrice: number;
 
-  @Column({ type: 'decimal', precision: 10, scale: 2, nullable: true })
+  @Column({ type: 'float', nullable: true })
   collectionPrice: number;
 
   @Column({ nullable: true })
@@ -70,6 +70,12 @@ export class Podcast {
 
   @Column({ nullable: true })
   searchTerm: string;
+
+  @Column({ default: 'podcast' })
+  kind: string;
+
+  @Column({ default: 'track' })
+  wrapperType: string;
 
   @CreateDateColumn()
   createdAt: Date;

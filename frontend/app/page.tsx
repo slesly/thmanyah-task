@@ -2,6 +2,7 @@ import { Suspense } from 'react'
 import SearchForm from './components/SearchForm'
 import PodcastCard from './components/PodcastCard'
 import EpisodeCard from './components/EpisodeCard'
+import PodcastSlider from './components/PodcastSlider'
 import { SearchResult, Podcast, Episode } from './types/podcast'
 import { searchPodcasts, getRecentSearches } from './lib/api'
 
@@ -59,10 +60,8 @@ export default async function Home({ searchParams }: HomePageProps) {
           <div className="flex justify-between items-center py-4">
             <div className="flex items-center gap-3 space-x-reverse">
               <div className="flex items-center gap-2">
-                <img src="/logo-black.png" alt="Thmanyah" className="h-8 w-auto" />
-                <span className="text-xl font-bold text-foreground">Thmanyah</span>
+                <img src="/logo-black.png" alt="Logo" className="h-8 w-auto" />
               </div>
-              <p className="text-light-500 hidden sm:block">البحث في بودكاستات iTunes</p>
             </div>
           </div>
         </div>
@@ -105,26 +104,16 @@ export default async function Home({ searchParams }: HomePageProps) {
               </div>
             </div>
 
-            {/* Podcasts Section */}
+            {/* Podcasts Section - Slider */}
             {podcasts.length > 0 && (
-              <div className="mb-12">
-                <div className="border-b border-border pb-4 mb-6">
-                  <h3 className="text-xl font-semibold text-foreground mb-2">
-                    البودكاستات ({podcasts.length})
-                  </h3>
-                  <p className="text-light-500">
-                    البودكاستات التي تطابق بحثك
-                  </p>
-                </div>
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                  {podcasts.map((podcast) => (
-                    <PodcastCard key={podcast._id} podcast={podcast} />
-                  ))}
-                </div>
-              </div>
+              <PodcastSlider
+                podcasts={podcasts}
+                title="البودكاستات"
+                subtitle="البودكاستات التي تطابق بحثك"
+              />
             )}
 
-            {/* Episodes Section */}
+            {/* Episodes Section - Medium Cards */}
             {episodes.length > 0 && (
               <div className="mb-12">
                 <div className="border-b border-border pb-4 mb-6">
@@ -135,7 +124,7 @@ export default async function Home({ searchParams }: HomePageProps) {
                     الحلقات التي تطابق بحثك
                   </p>
                 </div>
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                   {episodes.map((episode) => (
                     <EpisodeCard key={episode._id} episode={episode} />
                   ))}
@@ -180,28 +169,22 @@ export default async function Home({ searchParams }: HomePageProps) {
               </p>
             </div>
 
-            {/* Recent Podcasts */}
+            {/* Recent Podcasts - Slider */}
             {recentPodcasts.length > 0 && (
-              <div className="mb-8">
-                <h3 className="text-lg font-semibold text-foreground mb-4">
-                  البودكاستات ({recentPodcasts.length})
-                </h3>
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                  {recentPodcasts.slice(0, 4).map((podcast) => (
-                    <PodcastCard key={podcast._id} podcast={podcast} />
-                  ))}
-                </div>
-              </div>
+              <PodcastSlider
+                podcasts={recentPodcasts}
+                title="البودكاستات"
+              />
             )}
 
-            {/* Recent Episodes */}
+            {/* Recent Episodes - Medium Cards */}
             {recentEpisodes.length > 0 && (
               <div className="mb-8">
                 <h3 className="text-lg font-semibold text-foreground mb-4">
                   الحلقات ({recentEpisodes.length})
                 </h3>
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                  {recentEpisodes.slice(0, 4).map((episode) => (
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {recentEpisodes.map((episode) => (
                     <EpisodeCard key={episode._id} episode={episode} />
                   ))}
                 </div>
