@@ -8,7 +8,6 @@ build:
       - echo "Building application..."
       - npm run build
 run:
-  runtime-version: 18
   command: npm run start:prod
   network:
     port: 3001
