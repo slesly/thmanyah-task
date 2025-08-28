@@ -17,9 +17,10 @@ import { Episode } from './entities/episode.entity';
       port: parseInt(process.env.DB_PORT) || 5432,
       username: process.env.DB_USERNAME || 'postgres',
       password: process.env.DB_PASSWORD || 'password',
-      database: process.env.DB_NAME || 'thmanyah_db',
+      database: process.env.DB_DATABASE || 'thmanyahdb',
       entities: [Podcast, Episode],
-      synchronize: true, // Only for development
+      synchronize: process.env.NODE_ENV !== 'production', // Only for development
+      logging: process.env.NODE_ENV === 'development',
     }),
     TypeOrmModule.forFeature([Podcast, Episode]),
   ],
