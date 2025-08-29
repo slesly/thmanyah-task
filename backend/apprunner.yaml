@@ -6,11 +6,21 @@ build:
     pre-build:
       - echo "Installing dependencies..."
       - npm ci
+      - echo "Current directory:"
+      - pwd
+      - echo "Directory contents:"
+      - ls -la
     build:
       - echo "Building application..."
       - npm run build
+      - echo "Checking dist folder..."
+      - ls -la dist/
+      - echo "Checking if main.js exists:"
+      - ls -la dist/main.js || echo "main.js not found"
+      - echo "Checking if main.js.map exists:"
+      - ls -la dist/main.js.map || echo "main.js.map not found"
 
 run:
-  command: npm run start:prod
+  command: node dist/main.js
   network:
     port: 3001
