@@ -16,7 +16,7 @@ build:
       - export DB_PORT=5432
       - export DB_USERNAME=postgres
       - export DB_PASSWORD=P5t6d8f10
-      - export DB_DATABASE=postgres
+      - export DB_DATABASE=thmanyahdb
       - export NODE_ENV=production
       - export PORT=3001
       - export ALLOWED_ORIGINS=http://localhost:3000,https://main.d19e30r7ro0wel.amplifyapp.com,https://agd9mkwapi.us-east-1.awsapprunner.com
