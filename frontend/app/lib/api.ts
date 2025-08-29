@@ -133,6 +133,8 @@ export async function checkApiHealth(): Promise<any> {
       headers: {
         'Content-Type': 'application/json',
       },
+      // Add longer timeout for health check
+      signal: AbortSignal.timeout(15000) // 15 second timeout
     })
 
     if (!response.ok) {
@@ -170,6 +172,8 @@ export async function searchPodcasts(searchTerm: string): Promise<SearchResult[]
       headers: {
         'Content-Type': 'application/json',
       },
+      // Add longer timeout for search
+      signal: AbortSignal.timeout(20000) // 20 second timeout
     })
     
     if (!response.ok) {
@@ -231,6 +235,8 @@ export async function getRecentSearches(): Promise<SearchResult[]> {
       headers: {
         'Content-Type': 'application/json',
       },
+      // Add longer timeout for recent searches
+      signal: AbortSignal.timeout(15000) // 15 second timeout
     })
     
     if (!response.ok) {
