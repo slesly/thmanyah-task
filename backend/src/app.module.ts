@@ -19,7 +19,7 @@ import { Episode } from './entities/episode.entity';
       password: process.env.DB_PASSWORD || 'password',
       database: process.env.DB_DATABASE || 'thmanyahdb',
       entities: [Podcast, Episode],
-      synchronize: process.env.NODE_ENV !== 'production', // Only for development
+      synchronize: true, // Enable for first deployment
       logging: process.env.NODE_ENV === 'development',
       retryAttempts: 10,
       retryDelay: 3000,
