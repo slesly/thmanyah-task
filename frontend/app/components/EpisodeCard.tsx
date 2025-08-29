@@ -1,3 +1,5 @@
+'use client'
+
 import { Episode } from '../types/podcast'
 
 interface EpisodeCardProps {
