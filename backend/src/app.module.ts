@@ -24,10 +24,16 @@ import { Episode } from './entities/episode.entity';
       retryAttempts: 10,
       retryDelay: 3000,
       keepConnectionAlive: true,
+      ssl: process.env.NODE_ENV === 'production' ? {
+        rejectUnauthorized: false
+      } : false,
       extra: {
         connectionTimeoutMillis: 30000,
         query_timeout: 30000,
         statement_timeout: 30000,
+        ssl: process.env.NODE_ENV === 'production' ? {
+          rejectUnauthorized: false
+        } : false,
       },
     }),
     TypeOrmModule.forFeature([Podcast, Episode]),
