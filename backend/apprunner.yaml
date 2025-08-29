@@ -16,7 +16,7 @@ build:
       - export DB_PORT=5432
       - export DB_USERNAME=postgres
       - export DB_PASSWORD=P5t6d8f10
-      - export DB_DATABASE=thmanyah-db-1
+      - export DB_DATABASE=postgres
       - export NODE_ENV=production
       - export PORT=3001
       - export ALLOWED_ORIGINS=http://localhost:3000,https://main.d19e30r7ro0wel.amplifyapp.com,https://agd9mkwapi.us-east-1.awsapprunner.com
@@ -29,6 +29,6 @@ build:
       - ls -la dist/main.js.map || echo "main.js.map not found"
 
 run:
-  command: DB_HOST=thmanyah-db-1.cspi46cem801.us-east-1.rds.amazonaws.com DB_PORT=5432 DB_USERNAME=postgres DB_PASSWORD=P5t6d8f10 DB_DATABASE=thmanyah-db-1 NODE_ENV=production PORT=3001 ALLOWED_ORIGINS=http://localhost:3000,https://main.d19e30r7ro0wel.amplifyapp.com,https://agd9mkwapi.us-east-1.awsapprunner.com node dist/main.js
+  command: DB_HOST=thmanyah-db-1.cspi46cem801.us-east-1.rds.amazonaws.com DB_PORT=5432 DB_USERNAME=postgres DB_PASSWORD=P5t6d8f10 DB_DATABASE=postgres NODE_ENV=production PORT=3001 ALLOWED_ORIGINS=http://localhost:3000,https://main.d19e30r7ro0wel.amplifyapp.com,https://agd9mkwapi.us-east-1.awsapprunner.com node dist/main.js
   network:
     port: 3001
