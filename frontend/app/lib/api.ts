@@ -27,6 +27,104 @@ const API_BASE_URL = getApiBaseUrl()
 const searchCache = new Map<string, { data: SearchResult[], timestamp: number }>()
 const CACHE_DURATION = 5 * 60 * 1000 // 5 minutes
 
+// Fallback to iTunes API directly
+async function searchITunesDirectly(searchTerm: string): Promise<SearchResult[]> {
+  try {
+    console.log('Using iTunes API fallback for:', searchTerm)
+
+    // Search for podcasts
+    const podcastResponse = await fetch(
+      `https://itunes.apple.com/search?term=${encodeURIComponent(searchTerm)}&media=podcast&entity=podcast&limit=25`
+    )
+
+    // Search for episodes
+    const episodeResponse = await fetch(
+      `https://itunes.apple.com/search?term=${encodeURIComponent(searchTerm)}&media=podcast&entity=podcastEpisode&limit=25`
+    )
+
+    if (!podcastResponse.ok || !episodeResponse.ok) {
+      throw new Error('iTunes API request failed')
+    }
+
+    const podcastData = await podcastResponse.json()
+    const episodeData = await episodeResponse.json()
+
+    // Transform podcasts
+    const podcasts: SearchResult[] = (podcastData.results || []).map((item: any) => ({
+      _id: item.trackId?.toString() || Math.random().toString(),
+      trackId: item.trackId,
+      trackName: item.trackName,
+      artistName: item.artistName,
+      collectionName: item.collectionName,
+      artworkUrl100: item.artworkUrl100,
+      artworkUrl600: item.artworkUrl600,
+      description: item.description,
+      releaseDate: item.releaseDate,
+      trackCount: item.trackCount,
+      primaryGenreName: item.primaryGenreName,
+      country: item.country,
+      feedUrl: item.feedUrl,
+      trackViewUrl: item.trackViewUrl,
+      collectionViewUrl: item.collectionViewUrl,
+      artistViewUrl: item.artistViewUrl,
+      previewUrl: item.previewUrl,
+      trackPrice: item.trackPrice,
+      collectionPrice: item.collectionPrice,
+      currency: item.currency,
+      contentAdvisoryRating: item.contentAdvisoryRating,
+      isExplicit: item.isExplicit,
+      wrapperType: item.wrapperType,
+      kind: 'podcast',
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+      searchTerm
+    }))
+
+    // Transform episodes
+    const episodes: SearchResult[] = (episodeData.results || []).map((item: any) => ({
+      _id: item.trackId?.toString() || Math.random().toString(),
+      trackId: item.trackId,
+      trackName: item.trackName,
+      artistName: item.artistName,
+      collectionName: item.collectionName,
+      artworkUrl100: item.artworkUrl100,
+      artworkUrl600: item.artworkUrl600,
+      description: item.description,
+      releaseDate: item.releaseDate,
+      trackCount: item.trackCount,
+      primaryGenreName: item.primaryGenreName,
+      country: item.country,
+      feedUrl: item.feedUrl,
+      trackViewUrl: item.trackViewUrl,
+      collectionViewUrl: item.collectionViewUrl,
+      artistViewUrl: item.artistViewUrl,
+      previewUrl: item.previewUrl,
+      trackPrice: item.trackPrice,
+      collectionPrice: item.collectionPrice,
+      currency: item.currency,
+      contentAdvisoryRating: item.contentAdvisoryRating,
+      isExplicit: item.isExplicit,
+      wrapperType: item.wrapperType,
+      kind: 'episode',
+      episodeUrl: item.episodeUrl,
+      episodeContentType: item.episodeContentType,
+      episodeFileExtension: item.episodeFileExtension,
+      episodeGuid: item.episodeGuid,
+      episodeLength: item.episodeLength,
+      episodeNumber: item.episodeNumber,
+      seasonNumber: item.seasonNumber,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+      searchTerm
+    }))
+
+    return [...podcasts, ...episodes]
+  } catch (error) {
+    console.error('iTunes API fallback failed:', error)
+    throw new Error('All search methods failed')
+  }
+}
+
 export async function checkApiHealth(): Promise<any> {
   try {
     console.log('Checking API health at:', `${API_BASE_URL}/health`)
@@ -46,7 +144,12 @@ export async function checkApiHealth(): Promise<any> {
     return data
   } catch (error) {
     console.error('API Health Check Error:', error)
-    throw new Error(`API health check failed: ${error instanceof Error ? error.message : 'Unknown error'}`)
+    // Return a fallback health status
+    return {
+      status: 'fallback',
+      message: 'Using iTunes API directly',
+      timestamp: new Date().toISOString()
+    }
   }
 }
 
@@ -104,7 +207,18 @@ export async function searchPodcasts(searchTerm: string): Promise<SearchResult[]
     return data
   } catch (error) {
     console.error('Search API Error:', error)
-    throw new Error(`Search failed: ${error instanceof Error ? error.message : 'Unknown error'}`)
+
+    // Try iTunes API directly as fallback
+    console.log('Trying iTunes API fallback...')
+    const fallbackData = await searchITunesDirectly(trimmedTerm)
+
+    // Cache the fallback result
+    searchCache.set(trimmedTerm, {
+      data: fallbackData,
+      timestamp: Date.now()
+    })
+
+    return fallbackData
   }
 }
 
@@ -146,6 +260,9 @@ export async function getRecentSearches(): Promise<SearchResult[]> {
     return data
   } catch (error) {
     console.error('Recent Searches API Error:', error)
-    throw new Error(`Failed to load recent searches: ${error instanceof Error ? error.message : 'Unknown error'}`)
+
+    // Return empty array for recent searches if backend fails
+    // We can't get recent searches from iTunes API directly
+    return []
   }
 }

@@ -31,8 +31,12 @@ export default async function Home({ searchParams }: HomePageProps) {
   
   // Check API health first
   let apiHealth = null
+  let usingFallback = false
   try {
     apiHealth = await checkApiHealth()
+    if (apiHealth.status === 'fallback') {
+      usingFallback = true
+    }
   } catch (error) {
     console.error('API Health check failed:', error)
   }
@@ -83,17 +87,54 @@ export default async function Home({ searchParams }: HomePageProps) {
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* API Health Status */}
         {apiHealth && (
-          <div className="mb-4 p-3 bg-blue-50 border border-blue-200 rounded-lg">
+          <div className={`mb-4 p-3 border rounded-lg ${
+            apiHealth.status === 'healthy' 
+              ? 'bg-blue-50 border-blue-200' 
+              : apiHealth.status === 'fallback'
+              ? 'bg-yellow-50 border-yellow-200'
+              : 'bg-red-50 border-red-200'
+          }`}>
             <div className="flex items-center gap-2">
-              <div className={`w-2 h-2 rounded-full ${apiHealth.status === 'healthy' ? 'bg-green-500' : 'bg-red-500'}`}></div>
-              <span className="text-sm text-blue-800">
-                حالة الخادم: {apiHealth.status === 'healthy' ? 'يعمل بشكل طبيعي' : 'مشكلة في الاتصال'}
+              <div className={`w-2 h-2 rounded-full ${
+                apiHealth.status === 'healthy' 
+                  ? 'bg-green-500' 
+                  : apiHealth.status === 'fallback'
+                  ? 'bg-yellow-500'
+                  : 'bg-red-500'
+              }`}></div>
+              <span className={`text-sm ${
+                apiHealth.status === 'healthy' 
+                  ? 'text-blue-800' 
+                  : apiHealth.status === 'fallback'
+                  ? 'text-yellow-800'
+                  : 'text-red-800'
+              }`}>
+                {apiHealth.status === 'healthy' 
+                  ? 'حالة الخادم: يعمل بشكل طبيعي'
+                  : apiHealth.status === 'fallback'
+                  ? 'حالة الخادم: يستخدم iTunes API مباشرة'
+                  : 'حالة الخادم: مشكلة في الاتصال'
+                }
               </span>
               {process.env.NODE_ENV === 'development' && (
-                <span className="text-xs text-blue-600">
-                  ({apiHealth.environment} - {apiHealth.database})
+                <span className="text-xs text-gray-600">
+                  ({apiHealth.environment || 'unknown'} - {apiHealth.database || 'unknown'})
                 </span>
               )}
+            </div>
+          </div>
+        )}
+
+        {/* Fallback Notice */}
+        {usingFallback && (
+          <div className="mb-4 p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
+            <div className="flex items-center gap-2">
+              <svg className="w-4 h-4 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z" />
+              </svg>
+              <span className="text-sm text-yellow-800">
+                تحذير: يتم استخدام iTunes API مباشرة. بعض الميزات قد لا تعمل بشكل كامل.
+              </span>
             </div>
           </div>
         )}
@@ -120,6 +161,13 @@ export default async function Home({ searchParams }: HomePageProps) {
               <p>• تأكد من أن الخادم يعمل بشكل صحيح</p>
               <p>• تحقق من إعدادات الشبكة</p>
               <p>• جرب تحديث الصفحة</p>
+              <p>• إذا استمرت المشكلة، يرجى التواصل مع الدعم الفني</p>
+            </div>
+            <div className="mt-4 p-3 bg-gray-50 rounded text-xs text-gray-600">
+              <p><strong>معلومات التصحيح:</strong></p>
+              <p>• البيئة: {process.env.NODE_ENV || 'غير محدد'}</p>
+              <p>• الوقت: {new Date().toLocaleString('ar-SA')}</p>
+              <p>• المتصفح: {typeof window !== 'undefined' ? window.navigator.userAgent : 'Server-side'}</p>
             </div>
           </div>
         )}
