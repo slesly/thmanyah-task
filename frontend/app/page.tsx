@@ -34,6 +34,7 @@ export default async function Home({ searchParams }: HomePageProps) {
   let usingFallback = false
   try {
     apiHealth = await checkApiHealth()
+    console.log('apiHealth', apiHealth)
     if (apiHealth.status === 'fallback') {
       usingFallback = true
     }
