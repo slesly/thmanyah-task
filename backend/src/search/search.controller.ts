@@ -14,14 +14,19 @@ export class SearchController {
         status: 'healthy',
         timestamp: new Date().toISOString(),
         database: 'connected',
-        environment: process.env.NODE_ENV || 'development'
+        environment: process.env.NODE_ENV || 'development',
+        apiUrl: process.env.API_URL || 'not set',
+        allowedOrigins: process.env.ALLOWED_ORIGINS || 'not set'
       };
     } catch (error) {
       throw new HttpException({
         status: 'unhealthy',
         timestamp: new Date().toISOString(),
         database: 'disconnected',
-        error: error.message
+        error: error.message,
+        environment: process.env.NODE_ENV || 'development',
+        apiUrl: process.env.API_URL || 'not set',
+        allowedOrigins: process.env.ALLOWED_ORIGINS || 'not set'
       }, HttpStatus.SERVICE_UNAVAILABLE);
     }
   }
@@ -33,18 +38,26 @@ export class SearchController {
     }
 
     try {
-      return await this.searchService.searchPodcasts(searchTerm.trim());
+      console.log(`Searching for: "${searchTerm}"`);
+      const result = await this.searchService.searchPodcasts(searchTerm.trim());
+      console.log(`Found ${result.podcasts.length} podcasts and ${result.episodes.length} episodes`);
+      return result;
     } catch (error) {
-      throw new HttpException('Failed to search podcasts', HttpStatus.INTERNAL_SERVER_ERROR);
+      console.error('Search error:', error);
+      throw new HttpException(`Failed to search podcasts: ${error.message}`, HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
 
   @Get('recent')
   async getRecentSearches() {
     try {
-      return await this.searchService.getRecentSearches();
+      console.log('Fetching recent searches');
+      const result = await this.searchService.getRecentSearches();
+      console.log(`Found ${result.podcasts.length} recent podcasts and ${result.episodes.length} recent episodes`);
+      return result;
     } catch (error) {
-      throw new HttpException('Failed to get recent searches', HttpStatus.INTERNAL_SERVER_ERROR);
+      console.error('Recent searches error:', error);
+      throw new HttpException(`Failed to get recent searches: ${error.message}`, HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
 } 

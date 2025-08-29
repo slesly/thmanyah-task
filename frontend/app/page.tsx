@@ -4,7 +4,7 @@ import PodcastCard from './components/PodcastCard'
 import EpisodeCard from './components/EpisodeCard'
 import PodcastSlider from './components/PodcastSlider'
 import { SearchResult, Podcast, Episode } from './types/podcast'
-import { searchPodcasts, getRecentSearches } from './lib/api'
+import { searchPodcasts, getRecentSearches, checkApiHealth } from './lib/api'
 
 interface HomePageProps {
   searchParams: { search?: string }
@@ -29,22 +29,35 @@ function separateResults(results: SearchResult[]): { podcasts: Podcast[], episod
 export default async function Home({ searchParams }: HomePageProps) {
   const searchTerm = searchParams.search || ''
   
+  // Check API health first
+  let apiHealth = null
+  try {
+    apiHealth = await checkApiHealth()
+  } catch (error) {
+    console.error('API Health check failed:', error)
+  }
+  
   // Fetch data based on search params
   let searchResults: SearchResult[] = []
   let recentSearches: SearchResult[] = []
   let error = ''
+  let errorDetails = ''
   
   if (searchTerm) {
     try {
       searchResults = await searchPodcasts(searchTerm)
     } catch (err: any) {
       error = err.message || 'Failed to search podcasts'
+      errorDetails = err.stack || ''
+      console.error('Search error:', err)
     }
   } else {
     try {
       recentSearches = await getRecentSearches()
-    } catch (err) {
-      console.error('Error loading recent searches:', err)
+    } catch (err: any) {
+      error = err.message || 'Failed to load recent searches'
+      errorDetails = err.stack || ''
+      console.error('Recent searches error:', err)
     }
   }
 
@@ -68,6 +81,23 @@ export default async function Home({ searchParams }: HomePageProps) {
       </header>
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {/* API Health Status */}
+        {apiHealth && (
+          <div className="mb-4 p-3 bg-blue-50 border border-blue-200 rounded-lg">
+            <div className="flex items-center gap-2">
+              <div className={`w-2 h-2 rounded-full ${apiHealth.status === 'healthy' ? 'bg-green-500' : 'bg-red-500'}`}></div>
+              <span className="text-sm text-blue-800">
+                حالة الخادم: {apiHealth.status === 'healthy' ? 'يعمل بشكل طبيعي' : 'مشكلة في الاتصال'}
+              </span>
+              {process.env.NODE_ENV === 'development' && (
+                <span className="text-xs text-blue-600">
+                  ({apiHealth.environment} - {apiHealth.database})
+                </span>
+              )}
+            </div>
+          </div>
+        )}
+
         {/* Search Form */}
         <div className="mb-8">
           <Suspense fallback={<div className="h-12 bg-light-100 rounded-lg animate-pulse"></div>}>
@@ -78,7 +108,19 @@ export default async function Home({ searchParams }: HomePageProps) {
         {/* Error Message */}
         {error && (
           <div className="mb-8 p-4 bg-red-50 border border-red-200 rounded-lg">
-            <p className="text-red-800">{error}</p>
+            <p className="text-red-800 font-semibold mb-2">خطأ في الاتصال بالخادم</p>
+            <p className="text-red-700 text-sm mb-2">{error}</p>
+            {process.env.NODE_ENV === 'development' && errorDetails && (
+              <details className="text-red-600 text-xs">
+                <summary className="cursor-pointer">تفاصيل الخطأ (للطور)</summary>
+                <pre className="mt-2 whitespace-pre-wrap">{errorDetails}</pre>
+              </details>
+            )}
+            <div className="mt-3 text-sm text-red-600">
+              <p>• تأكد من أن الخادم يعمل بشكل صحيح</p>
+              <p>• تحقق من إعدادات الشبكة</p>
+              <p>• جرب تحديث الصفحة</p>
+            </div>
           </div>
         )}
 
