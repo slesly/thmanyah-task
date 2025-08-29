@@ -31,7 +31,7 @@ export async function searchPodcasts(searchTerm: string): Promise<SearchResult[]
     return cached.data
   }
   
-  const response = await fetch(`${API_BASE_URL}/api/search?q=${encodeURIComponent(trimmedTerm)}`, {
+  const response = await fetch(`${API_BASE_URL}/search?q=${encodeURIComponent(trimmedTerm)}`, {
     next: { revalidate: 60 } // Cache for 1 minute
   })
   
@@ -63,7 +63,7 @@ export async function searchPodcasts(searchTerm: string): Promise<SearchResult[]
 }
 
 export async function getRecentSearches(): Promise<SearchResult[]> {
-  const response = await fetch(`${API_BASE_URL}/api/search/recent`, {
+  const response = await fetch(`${API_BASE_URL}/recent`, {
     next: { revalidate: 300 } // Cache for 5 minutes
   })
   
