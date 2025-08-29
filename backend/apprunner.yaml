@@ -31,3 +31,11 @@ run:
       value: "thmanyah-db-1"
     - name: ALLOWED_ORIGINS
       value: "http://localhost:3000,https://main.d19e30r7ro0wel.amplifyapp.com,https://agd9mkwapi.us-east-1.awsapprunner.com"
+
+health_check:
+  protocol: HTTP
+  path: /health
+  interval: 5
+  timeout: 2
+  healthy_threshold: 2
+  unhealthy_threshold: 3

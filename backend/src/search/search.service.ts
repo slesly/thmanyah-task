@@ -69,6 +69,17 @@ export class SearchService {
     private episodeRepository: Repository<Episode>,
   ) {}
 
+  async testDatabaseConnection(): Promise<boolean> {
+    try {
+      // Simple query to test database connection
+      await this.podcastRepository.query('SELECT 1');
+      return true;
+    } catch (error) {
+      console.error('Database connection test failed:', error);
+      throw error;
+    }
+  }
+
   async searchPodcasts(searchTerm: string): Promise<SearchResponse> {
     try {
       // Search for podcasts

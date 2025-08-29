@@ -21,6 +21,14 @@ import { Episode } from './entities/episode.entity';
       entities: [Podcast, Episode],
       synchronize: process.env.NODE_ENV !== 'production', // Only for development
       logging: process.env.NODE_ENV === 'development',
+      retryAttempts: 10,
+      retryDelay: 3000,
+      keepConnectionAlive: true,
+      extra: {
+        connectionTimeoutMillis: 30000,
+        query_timeout: 30000,
+        statement_timeout: 30000,
+      },
     }),
     TypeOrmModule.forFeature([Podcast, Episode]),
   ],
