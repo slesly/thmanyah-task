@@ -4,12 +4,14 @@ import { AppModule } from './app.module';
 async function bootstrap() {
   try {
     console.log('🚀 Starting NestJS application...');
-    console.log(`📋 Environment: ${process.env.NODE_ENV || 'development'}`);
-    console.log(`🔌 Port: ${process.env.PORT || 3001}`);
-    console.log(`🗄️ Database Host: ${process.env.DB_HOST || 'localhost'}`);
-    console.log(`🗄️ Database Port: ${process.env.DB_PORT || 5432}`);
-    console.log(`🗄️ Database Name: ${process.env.DB_DATABASE || 'thmanyahdb'}`);
-    console.log(`👤 Database User: ${process.env.DB_USERNAME || 'postgres'}`);
+    console.log('🔍 Environment Variables Debug:');
+    console.log(`📋 NODE_ENV: ${process.env.NODE_ENV || 'NOT_SET'}`);
+    console.log(`🔌 PORT: ${process.env.PORT || 'NOT_SET'}`);
+    console.log(`🗄️ DB_HOST: ${process.env.DB_HOST || 'NOT_SET'}`);
+    console.log(`🗄️ DB_PORT: ${process.env.DB_PORT || 'NOT_SET'}`);
+    console.log(`🗄️ DB_DATABASE: ${process.env.DB_DATABASE || 'NOT_SET'}`);
+    console.log(`👤 DB_USERNAME: ${process.env.DB_USERNAME || 'NOT_SET'}`);
+    console.log(`🔑 DB_PASSWORD: ${process.env.DB_PASSWORD ? 'SET' : 'NOT_SET'}`);
 
     const app = await NestFactory.create(AppModule);
 
