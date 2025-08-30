@@ -49,21 +49,24 @@ export default async function Home({
 
   return (
     <div className="min-h-screen text-foreground relative flex flex-col">
-      <div className="custom-background"></div>
       <div className="glass-effect sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center py-4">
-            <div className="flex items-center gap-3 space-x-reverse">
-              <div className="flex items-center gap-2">
-                <img src="/logo.svg" alt="Logo" className="h-8 w-auto" />
+          <div className="flex justify-between items-center py-3 md:py-4">
+            <div className="flex items-center gap-2 md:gap-3 space-x-reverse">
+              <div className="flex items-center gap-1 md:gap-2">
+                <img src="/logo.svg" alt="Logo" className="h-6 md:h-8 w-auto" />
               </div>
             </div>
           </div>
         </div>
       </div>
 
-      <main className="flex-1 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="mb-8">
+      <div className="relative md:h-[212px] h-[180px] overflow-hidden">
+        <div className="custom-background"></div>
+      </div>
+
+      <main className="container flex-1 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-4 pt-0 md:pb-8 md:pt-0 mt-[-46px]">
+        <div className="mb-6 md:mb-8">
           <SearchForm initialSearchTerm={searchTerm} />
         </div>
 
@@ -78,16 +81,16 @@ export default async function Home({
         {!searchTerm && (recentSearches.podcasts.length > 0 || recentSearches.episodes.length > 0) && (
           <>
             {recentSearches.podcasts.length > 0 && (
-              <div className="mb-8">
-                <h2 className="text-2xl font-bold mb-6 text-foreground text-center">آخر البودكاست تم البحث عنهـا</h2>
+              <div className="mb-6 md:mb-8">
+                <h2 className="text-xl md:text-2xl font-bold mb-4 md:mb-6 text-foreground text-center">آخر البودكاست تم البحث عنهـا</h2>
                 <RecentPodcastSlider podcasts={recentSearches.podcasts} />
               </div>
             )}
 
             {recentSearches.episodes.length > 0 && (
-              <div className="mb-8">
-                <h2 className="text-2xl font-bold mb-6 text-foreground">آخر الحلقــات تم البحث عنها</h2>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="mb-6 md:mb-8">
+                <h2 className="text-xl md:text-2xl font-bold mb-4 md:mb-6 text-foreground">آخر الحلقــات تم البحث عنها</h2>
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6">
                   {recentSearches.episodes.map((episode: any, index: number) => (
                     <AnimatedElement 
                       key={episode._id || episode.trackId} 
@@ -168,11 +171,10 @@ export default async function Home({
         )}
       </main>
 
-      {/* Footer */}
       <footer className="relative mt-auto">
         <div className="absolute top-0 right-0 w-full h-px bg-white/10"></div>
         <div className="container mx-auto px-4">
-          <div className="flex max-sm:flex-col items-center justify-between gap-6 md:gap-0 py-12 pt-24">
+          <div className="flex max-sm:flex-col items-center justify-between gap-4 md:gap-6 lg:gap-0 py-8 md:py-12 pt-16 md:pt-24">
             <div>
               <button className="transition-all duration-300 hover:opacity-90 cursor-pointer group" aria-label="العودة إلى أعلى الصفحة">
                 <img 
@@ -180,22 +182,22 @@ export default async function Home({
                   loading="lazy" 
                   width="96" 
                   height="32" 
-                  className="h-auto w-24 transition-transform duration-300 group-hover:translate-y-[-2px]" 
+                  className="h-auto w-20 md:w-24 transition-transform duration-300 group-hover:translate-y-[-2px]" 
                   src="/logo.svg"
                 />
               </button>
             </div>
-            <div className="flex items-center gap-6">
+            <div className="flex items-center gap-4 md:gap-6">
               <div>
                 <a target="_blank" rel="noopener noreferrer" className="text-white/50 hover:text-gray-300 transition-colors duration-200" aria-label="TikTok" href="https://www.tiktok.com/@thmanyah">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-5 w-5">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-4 w-4 md:h-5 md:w-5">
                     <path d="M9 12a4 4 0 1 0 4 4V4a5 5 0 0 0 5 5"></path>
                   </svg>
                 </a>
               </div>
               <div>
                 <a target="_blank" rel="noopener noreferrer" className="text-white/50 hover:text-gray-300 transition-colors duration-200" aria-label="Instagram" href="https://www.instagram.com/thmanyah">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-5 w-5">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-4 w-4 md:h-5 md:w-5">
                     <rect width="20" height="20" x="2" y="2" rx="5" ry="5"></rect>
                     <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
                     <line x1="17.5" x2="17.51" y1="6.5" y2="6.5"></line>
@@ -204,7 +206,7 @@ export default async function Home({
               </div>
               <div>
                 <a target="_blank" rel="noopener noreferrer" className="text-white/50 hover:text-gray-300 transition-colors duration-200" aria-label="X" href="https://x.com/thmanyah">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-5 w-5">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-4 w-4 md:h-5 md:w-5">
                     <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
                     <path d="M4 4l11.733 16h4.267l-11.733 -16z"></path>
                     <path d="M4 20l6.768 -6.768m2.46 -2.46l6.772 -6.772"></path>
@@ -213,7 +215,7 @@ export default async function Home({
               </div>
               <div>
                 <a target="_blank" rel="noopener noreferrer" className="text-white/50 hover:text-gray-300 transition-colors duration-200" aria-label="Youtube" href="https://www.youtube.com/@thmanyah">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-5 w-5">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-4 w-4 md:h-5 md:w-5">
                     <path d="M2.5 17a24.12 24.12 0 0 1 0-10 2 2 0 0 1 1.4-1.4 49.56 49.56 0 0 1 16.2 0A2 2 0 0 1 21.5 7a24.12 24.12 0 0 1 0 10 2 2 0 0 1-1.4 1.4 49.55 49.55 0 0 1-16.2 0A2 2 0 0 1 2.5 17"></path>
                     <path d="m10 15 5-3-5-3z"></path>
                   </svg>
@@ -221,19 +223,19 @@ export default async function Home({
               </div>
               <div>
                 <a target="_blank" rel="noopener noreferrer" className="text-white/50 hover:text-gray-300 transition-colors duration-200" aria-label="Facebook" href="https://www.facebook.com/thmanyah">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-5 w-5">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-4 w-4 md:h-5 md:w-5">
                     <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path>
                   </svg>
                 </a>
               </div>
               <div>
                 <a target="_blank" rel="noopener noreferrer" className="text-white/50 hover:text-gray-300 transition-colors duration-200" aria-label="LinkedIn" href="https://www.linkedin.com/company/thmanyah">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-5 w-5">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-4 w-4 md:h-5 md:w-5">
                     <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
                     <path d="M8 11v5"></path>
                     <path d="M8 8v.01"></path>
                     <path d="M12 16v-5"></path>
-                    <path d="M16 16v-3a2 2 0 1 0 -4 0"></path>
+                    <path d="M16 16v-3a2 0 1 0 -4 0"></path>
                     <path d="M3 7a4 4 0 0 1 4 -4h10a4 4 0 0 1 4 4v10a4 4 0 0 1 -4 4h-10a4 4 0 0 1 -4 -4z"></path>
                   </svg>
                 </a>
@@ -241,12 +243,12 @@ export default async function Home({
             </div>
           </div>
           <div className="h-px w-full bg-white/10"></div>
-          <div className="flex flex-col md:flex-row md:justify-center items-center gap-6 md:gap-x-6 py-8 pb-14 text-sm text-white/60">
+          <div className="flex flex-col md:flex-row md:justify-center items-center gap-4 md:gap-6 lg:gap-x-6 py-6 md:py-8 pb-10 md:pb-14 text-xs md:text-sm text-white/60">
             <p className="text-center">
               © 2025 ثمانية للنشر والتوزيع - جميع الحقوق محفوظة.
             </p>
-            <div className="flex items-center gap-4 md:gap-6 order-2">
-              <div className="flex flex-wrap items-center gap-4 md:gap-6 justify-center">
+            <div className="flex items-center gap-3 md:gap-4 lg:gap-6 order-2">
+              <div className="flex flex-wrap items-center gap-3 md:gap-4 lg:gap-6 justify-center">
                 <div className="flex items-center">
                   <div className="relative group">
                     <a rel="noopener noreferrer" target="_blank" className="text-white/60 hover:text-white transition-all duration-300 relative z-10 hover:drop-shadow-[0_0_8px_rgba(255,255,255,0.5)]" href="https://company.thmanyah.com/privacy-policy">
