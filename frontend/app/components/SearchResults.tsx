@@ -155,7 +155,6 @@ function PodcastSlider({ podcasts }: { podcasts: any[] }) {
                   className="podcast-card-image"
                   onLoad={() => setTimeout(() => checkScrollPosition(), 100)}
                 />
-                <span className="podcast-card-badge text-xs md:text-sm">بودكاست</span>
                 
                 {/* Hover overlay */}
                 <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex items-center justify-center">
@@ -276,9 +275,9 @@ export default function SearchResults({ searchTerm, searchResults, apiError }: S
       )}
 
       {searchResults.episodes.length > 0 && (
-        <div className="mb-8">
-          <h2 className="text-2xl font-bold mb-6 text-foreground">الحلقات</h2>
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+         <div className="mb-8">
+           <h2 className="text-2xl font-bold mb-6 text-foreground">الحلقات</h2>
+           <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
             {searchResults.episodes.map((episode: any, index: number) => (
               <AnimatedElement 
                 key={episode._id || episode.trackId} 
@@ -303,9 +302,9 @@ export default function SearchResults({ searchTerm, searchResults, apiError }: S
                     </div>
                   </a>
                   <div className="episode-meta-thmanyah">
-                    <div className="episode-author">
+                    {Boolean(episode.artistName) && <div className="episode-author">
                       <span className="episode-author-name" suppressHydrationWarning>{episode.artistName}</span>
-                    </div>
+                    </div>}
                     <div className="episode-date-container">
                       <span className="episode-date-text" suppressHydrationWarning>
                         في بودكاست {episode.collectionName || episode.artistName}

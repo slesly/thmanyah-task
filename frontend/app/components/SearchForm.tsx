@@ -121,21 +121,6 @@ export default function SearchForm({ initialSearchTerm = '' }: SearchFormProps) 
           {searchTerm.trim() && !showLoading && (
             <div className="absolute inset-y-0 right-3 flex items-center">
               <button
-                type="submit"
-                className="p-1 hover:text-primary transition-colors duration-200"
-                title="بحث (Enter)"
-              >
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
-                </svg>
-              </button>
-            </div>
-          )}
-
-          {/* Clear button - show when there's text */}
-          {searchTerm.trim() && !showLoading && (
-            <div className="absolute inset-y-0 right-10 flex items-center">
-              <button
                 type="button"
                 onClick={handleClear}
                 className="p-1 text-muted-foreground hover:text-foreground transition-colors duration-200"

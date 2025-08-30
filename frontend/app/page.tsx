@@ -66,7 +66,7 @@ export default async function Home({
       </div>
 
       <main className="container flex-1 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-4 pt-0 md:pb-8 md:pt-0 mt-[-46px]">
-        <div className="mb-6 md:mb-8">
+        <div className="mb-16 md:mb-20">
           <SearchForm initialSearchTerm={searchTerm} />
         </div>
 
@@ -115,9 +115,9 @@ export default async function Home({
                           </div>
                         </a>
                         <div className="episode-meta-thmanyah">
-                          <div className="episode-author">
+                          {Boolean(episode.artistName) && <div className="episode-author">
                             <span className="episode-author-name" suppressHydrationWarning>{episode.artistName}</span>
-                          </div>
+                          </div>}
                           <div className="episode-date-container">
                             <span className="episode-date-text" suppressHydrationWarning>
                               في بودكاست {episode.collectionName || episode.artistName}
@@ -173,7 +173,7 @@ export default async function Home({
 
       <footer className="relative mt-auto">
         <div className="absolute top-0 right-0 w-full h-px bg-white/10"></div>
-        <div className="container mx-auto px-4">
+        <div className="container mx-auto">
           <div className="flex max-sm:flex-col items-center justify-between gap-4 md:gap-6 lg:gap-0 py-8 md:py-12 pt-16 md:pt-24">
             <div>
               <button className="transition-all duration-300 hover:opacity-90 cursor-pointer group" aria-label="العودة إلى أعلى الصفحة">

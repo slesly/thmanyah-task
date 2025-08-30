@@ -133,7 +133,6 @@ export default function RecentPodcastSlider({ podcasts }: { podcasts: any[] }) {
                   className="podcast-card-image"
                   onLoad={() => setTimeout(() => checkScrollPosition(), 100)}
                 />
-                <span className="podcast-card-badge text-xs md:text-sm">بودكاست</span>
                 
                 {/* Hover overlay */}
                 <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex items-center justify-center">
