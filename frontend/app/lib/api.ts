@@ -1,5 +1,15 @@
 import { SearchResult, PodbaySearchResponse } from '../types/podcast'
 
+// Text sanitization function to prevent hydration issues
+const sanitizeText = (text: string) => {
+  if (!text) return '';
+  return text
+    .normalize('NFC')
+    .replace(/[\u200B-\u200D\uFEFF]/g, '')
+    .replace(/[\u2060-\u2064\u206A-\u206F]/g, '')
+    .trim();
+};
+
 // API Configuration with fallbacks
 const getApiBaseUrl = (): string => {
   if (typeof window !== 'undefined') {
@@ -89,7 +99,27 @@ export const searchPodcasts = async (searchTerm: string) => {
     }
 
     const data = await response.json();
-    return data;
+    
+    // Sanitize podcast and episode data
+    const sanitizedData = {
+      podcasts: data.podcasts?.map((podcast: any) => ({
+        ...podcast,
+        trackName: sanitizeText(podcast.trackName),
+        artistName: sanitizeText(podcast.artistName),
+        collectionName: sanitizeText(podcast.collectionName),
+        primaryGenreName: sanitizeText(podcast.primaryGenreName),
+        description: sanitizeText(podcast.description)
+      })) || [],
+      episodes: data.episodes?.map((episode: any) => ({
+        ...episode,
+        trackName: sanitizeText(episode.trackName),
+        artistName: sanitizeText(episode.artistName),
+        collectionName: sanitizeText(episode.collectionName),
+        description: sanitizeText(episode.description)
+      })) || []
+    };
+
+    return sanitizedData;
   } catch (error) {
     console.error('Search error:', error);
 
@@ -127,7 +157,27 @@ export const getRecentSearches = async () => {
     }
 
     const data = await response.json();
-    return data;
+    
+    // Sanitize podcast and episode data
+    const sanitizedData = {
+      podcasts: data.podcasts?.map((podcast: any) => ({
+        ...podcast,
+        trackName: sanitizeText(podcast.trackName),
+        artistName: sanitizeText(podcast.artistName),
+        collectionName: sanitizeText(podcast.collectionName),
+        primaryGenreName: sanitizeText(podcast.primaryGenreName),
+        description: sanitizeText(podcast.description)
+      })) || [],
+      episodes: data.episodes?.map((episode: any) => ({
+        ...episode,
+        trackName: sanitizeText(episode.trackName),
+        artistName: sanitizeText(episode.artistName),
+        collectionName: sanitizeText(episode.collectionName),
+        description: sanitizeText(episode.description)
+      })) || []
+    };
+
+    return sanitizedData;
   } catch (error) {
     console.error('Recent searches error:', error);
     return { podcasts: [], episodes: [] };

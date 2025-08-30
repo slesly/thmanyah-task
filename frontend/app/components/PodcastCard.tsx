@@ -81,19 +81,19 @@ export default function PodcastCard({ podcast, variant = 'default' }: PodcastCar
         {/* Content */}
         <div className="p-3">
           {/* Podcast title */}
-          <h3 className="font-semibold text-card-foreground mb-1 line-clamp-2 group-hover:text-accent-blue transition-colors duration-200 text-sm">
+          <h3 className="font-semibold text-card-foreground mb-1 line-clamp-2 group-hover:text-accent-blue transition-colors duration-200 text-sm" suppressHydrationWarning>
             {podcast.trackName}
           </h3>
           
           {/* Artist */}
-          <p className="text-light-500 text-xs mb-2 line-clamp-1">
+          <p className="text-light-500 text-xs mb-2 line-clamp-1" suppressHydrationWarning>
             {podcast.artistName}
           </p>
           
           {/* Genre and track count */}
           <div className="flex items-center justify-between text-xs text-light-400">
             {podcast.primaryGenreName && (
-              <span className="line-clamp-1">{podcast.primaryGenreName}</span>
+              <span className="line-clamp-1" suppressHydrationWarning>{podcast.primaryGenreName}</span>
             )}
             {podcast.trackCount && (
               <span>{podcast.trackCount} حلقة</span>
@@ -148,19 +148,20 @@ export default function PodcastCard({ podcast, variant = 'default' }: PodcastCar
         <h3 
           className="font-semibold text-card-foreground mb-2 line-clamp-2 group-hover:text-accent-blue transition-colors duration-200 cursor-pointer"
           onClick={handleCardClick}
+          suppressHydrationWarning
         >
           {podcast.trackName}
         </h3>
         
         {/* Artist */}
-        <p className="text-light-500 text-sm mb-3 line-clamp-1">
+        <p className="text-light-500 text-sm mb-3 line-clamp-1" suppressHydrationWarning>
           {podcast.artistName}
         </p>
         
         {/* Genre and track count */}
         <div className="flex items-center justify-between text-xs text-light-400 mb-3">
           {podcast.primaryGenreName && (
-            <span>{podcast.primaryGenreName}</span>
+            <span suppressHydrationWarning>{podcast.primaryGenreName}</span>
           )}
           {podcast.trackCount && (
             <span>{podcast.trackCount} حلقة</span>

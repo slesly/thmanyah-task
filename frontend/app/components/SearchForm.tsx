@@ -100,12 +100,12 @@ export default function SearchForm({ initialSearchTerm = '' }: SearchFormProps) 
             onChange={handleInputChange}
             onKeyDown={handleKeyDown}
             placeholder="ابحث في أكثر من 70 مليون بودكاست وحلقة"
-            className="w-full px-4 py-3 text-center border border-light-300 bg-white text-foreground rounded-lg text-base outline-none transition-all duration-200 placeholder:text-light-400 focus:border-accent-blue focus:text-foreground focus:placeholder:text-transparent focus:bg-white focus:ring-2 focus:ring-accent-blue/20"
+            className="w-full px-4 py-3 text-center search-input-dark rounded-lg text-base outline-none transition-all duration-200 placeholder:text-muted-foreground focus:text-foreground focus:placeholder:text-transparent focus:bg-card"
             autoComplete="off"
             suppressHydrationWarning
           />
           <div className="absolute inset-y-0 left-3 flex items-center pointer-events-none">
-            <svg className="w-4 h-4 text-light-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg className="w-4 h-4 text-muted-foreground" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
             </svg>
           </div>
@@ -113,7 +113,7 @@ export default function SearchForm({ initialSearchTerm = '' }: SearchFormProps) 
           {/* Loading indicator */}
           {showLoading && (
             <div className="absolute inset-y-0 right-3 flex items-center">
-              <div className="w-4 h-4 border-2 border-accent-blue border-t-transparent rounded-full animate-spin"></div>
+              <div className="w-4 h-4 loading-spinner rounded-full"></div>
             </div>
           )}
 
@@ -122,7 +122,7 @@ export default function SearchForm({ initialSearchTerm = '' }: SearchFormProps) 
             <div className="absolute inset-y-0 right-3 flex items-center">
               <button
                 type="submit"
-                className="p-1 text-accent-blue hover:text-accent-blue/80 transition-colors duration-200"
+                className="p-1 hover:text-primary transition-colors duration-200"
                 title="بحث (Enter)"
               >
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -138,7 +138,7 @@ export default function SearchForm({ initialSearchTerm = '' }: SearchFormProps) 
               <button
                 type="button"
                 onClick={handleClear}
-                className="p-1 text-light-400 hover:text-light-600 transition-colors duration-200"
+                className="p-1 text-muted-foreground hover:text-foreground transition-colors duration-200"
                 title="مسح البحث"
               >
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -152,12 +152,12 @@ export default function SearchForm({ initialSearchTerm = '' }: SearchFormProps) 
         {/* Status indicator */}
         <div className="mt-3 text-center">
           {showLoading && (
-            <p className="text-sm text-light-500 animate-pulse">
+            <p className="text-sm text-muted-foreground animate-pulse">
               جاري البحث عن "{searchTerm}"...
             </p>
           )}
           {searchTerm.trim().length > 0 && !isValidSearch && (
-            <p className="text-sm text-light-500">
+            <p className="text-sm text-muted-foreground">
               اكتب حرفين على الأقل للبحث
             </p>
           )}

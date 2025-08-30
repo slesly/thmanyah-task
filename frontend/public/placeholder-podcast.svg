@@ -5,8 +5,8 @@
   <path d="M45 45L55 50L45 55V45Z" fill="rgba(255,255,255,0.8)"/>
   <defs>
     <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#3b82f6"/>
-      <stop offset="100%" stop-color="#1d4ed8"/>
+      <stop offset="0%" stop-color="#00BC6D"/>
+      <stop offset="100%" stop-color="#008F54"/>
     </linearGradient>
   </defs>
 </svg> 

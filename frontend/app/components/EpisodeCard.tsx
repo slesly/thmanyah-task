@@ -93,17 +93,18 @@ export default function EpisodeCard({ episode }: EpisodeCardProps) {
         <h3 
           className="font-semibold text-card-foreground mb-2 line-clamp-2 group-hover:text-accent-blue transition-colors duration-200 cursor-pointer"
           onClick={handleCardClick}
+          suppressHydrationWarning
         >
           {episode.trackName}
         </h3>
         
         {/* Podcast name */}
-        <p className="text-light-500 text-sm mb-2 line-clamp-1">
+        <p className="text-light-500 text-sm mb-2 line-clamp-1" suppressHydrationWarning>
           {episode.collectionName}
         </p>
         
         {/* Artist */}
-        <p className="text-light-400 text-sm mb-3 line-clamp-1">
+        <p className="text-light-400 text-sm mb-3 line-clamp-1" suppressHydrationWarning>
           {episode.artistName}
         </p>
         

@@ -84,7 +84,7 @@ export default function PodcastSlider({ podcasts, title, subtitle }: PodcastSlid
   return (
     <div className="mb-12">
       <div className="border-b border-border pb-4 mb-6">
-        <h3 className="text-xl font-semibold text-foreground mb-2">
+        <h3 className="text-xl font-semibold text-foreground mb-2" suppressHydrationWarning>
           {title} ({podcasts.length})
         </h3>
         {subtitle && (
