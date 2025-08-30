@@ -50,7 +50,7 @@ export default async function Home({
   return (
     <div className="min-h-screen text-foreground relative flex flex-col">
       <div className="custom-background"></div>
-      <AnimatedElement animationType="fade" className="glass-effect sticky top-0 z-50">
+      <div className="glass-effect sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center py-4">
             <div className="flex items-center gap-3 space-x-reverse">
@@ -60,25 +60,23 @@ export default async function Home({
             </div>
           </div>
         </div>
-      </AnimatedElement>
+      </div>
 
       <main className="flex-1 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <AnimatedElement animationType="fade-up" className="mb-8">
+        <div className="mb-8">
           <SearchForm initialSearchTerm={searchTerm} />
-        </AnimatedElement>
+        </div>
 
         {/* Search Results with Loading State */}
-        <AnimatedElement animationType="fade-up">
-          <SearchResults 
-            searchTerm={searchTerm}
-            searchResults={searchResults}
-            apiError={apiError}
-          />
-        </AnimatedElement>
+        <SearchResults 
+          searchTerm={searchTerm}
+          searchResults={searchResults}
+          apiError={apiError}
+        />
 
         {/* Recent Searches - only show when no search term */}
         {!searchTerm && (recentSearches.podcasts.length > 0 || recentSearches.episodes.length > 0) && (
-          <AnimatedElement animationType="fade-up">
+          <>
             {recentSearches.podcasts.length > 0 && (
               <div className="mb-8">
                 <h2 className="text-2xl font-bold mb-6 text-foreground text-center">آخر البودكاست تم البحث عنهـا</h2>
@@ -147,12 +145,12 @@ export default async function Home({
                 </div>
               </div>
             )}
-          </AnimatedElement>
+          </>
         )}
 
         {/* Empty state when no search term and no recent searches */}
         {!searchTerm && recentSearches.podcasts.length === 0 && recentSearches.episodes.length === 0 && !apiError && (
-          <AnimatedElement animationType="fade-up" className="text-center py-12">
+          <div className="text-center py-12">
             <div className="max-w-md mx-auto">
               <img
                 src="/placeholder-podcast.svg"
@@ -166,12 +164,12 @@ export default async function Home({
                 ابدأ بالبحث عن البودكاست أو الحلقة التي تريد الاستماع إليها
               </p>
             </div>
-          </AnimatedElement>
+          </div>
         )}
       </main>
 
       {/* Footer */}
-      <AnimatedElement animationType="fade-up" className="relative mt-auto">
+      <footer className="relative mt-auto">
         <div className="absolute top-0 right-0 w-full h-px bg-white/10"></div>
         <div className="container mx-auto px-4">
           <div className="flex max-sm:flex-col items-center justify-between gap-6 md:gap-0 py-12 pt-24">
@@ -269,7 +267,7 @@ export default async function Home({
             </div>
           </div>
         </div>
-      </AnimatedElement>
+      </footer>
     </div>
   )
 } 
