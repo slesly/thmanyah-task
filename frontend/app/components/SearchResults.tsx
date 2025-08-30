@@ -134,34 +134,52 @@ function PodcastSlider({ podcasts }: { podcasts: any[] }) {
 
       {/* Slider */}
       <div ref={sliderRef} className="podcast-slider px-2 md:px-0">
-        {podcasts.map((podcast: any, index: number) => (
-          <AnimatedElement 
-            key={podcast._id || podcast.trackId} 
-            animationType="fade-scale" 
-            className="podcast-card"
-          >
-            <div className="relative">
-              <img
-                src={podcast.artworkUrl600 || podcast.artworkUrl100 || '/placeholder-podcast.svg'}
-                alt={podcast.trackName}
-                className="podcast-card-image"
-                onLoad={() => setTimeout(() => checkScrollPosition(), 100)}
-              />
-              <span className="podcast-card-badge text-xs md:text-sm">بودكاست</span>
-            </div>
-            <div className="podcast-card-content">
-              <p className="podcast-card-subtitle" suppressHydrationWarning>
-                {podcast.primaryGenreName || 'بودكاست'}
-              </p>
-              <h3 className="podcast-card-title line-clamp-2" suppressHydrationWarning>
-                {podcast.trackName}
-              </h3>
-              <p className="podcast-card-subtitle" suppressHydrationWarning>
-                {podcast.artistName}
-              </p>
-            </div>
-          </AnimatedElement>
-        ))}
+        {podcasts.map((podcast: any, index: number) => {
+          const handleCardClick = () => {
+            if (podcast.trackViewUrl) {
+              window.open(podcast.trackViewUrl, '_blank', 'noopener,noreferrer')
+            }
+          };
+
+          return (
+            <AnimatedElement 
+              key={podcast._id || podcast.trackId} 
+              animationType="fade-scale" 
+              className="podcast-card cursor-pointer group hover:scale-105 transition-transform duration-200"
+              onClick={handleCardClick}
+            >
+              <div className="relative">
+                <img
+                  src={podcast.artworkUrl600 || podcast.artworkUrl100 || '/placeholder-podcast.svg'}
+                  alt={podcast.trackName}
+                  className="podcast-card-image"
+                  onLoad={() => setTimeout(() => checkScrollPosition(), 100)}
+                />
+                <span className="podcast-card-badge text-xs md:text-sm">بودكاست</span>
+                
+                {/* Hover overlay */}
+                <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex items-center justify-center">
+                  <div className="w-8 h-8 md:w-10 md:h-10 bg-white/90 rounded-full flex items-center justify-center">
+                    <svg className="w-4 h-4 md:w-5 md:h-5 text-green-600" fill="currentColor" viewBox="0 0 24 24">
+                      <path d="M8 5v14l11-7z" />
+                    </svg>
+                  </div>
+                </div>
+              </div>
+              <div className="podcast-card-content">
+                <p className="podcast-card-subtitle" suppressHydrationWarning>
+                  {podcast.primaryGenreName || 'بودكاست'}
+                </p>
+                <h3 className="podcast-card-title group-hover:text-green-500 transition-colors duration-200" suppressHydrationWarning>
+                  {podcast.trackName}
+                </h3>
+                <p className="podcast-card-subtitle" suppressHydrationWarning>
+                  {podcast.artistName}
+                </p>
+              </div>
+            </AnimatedElement>
+          );
+        })}
       </div>
     </div>
   );
@@ -260,7 +278,7 @@ export default function SearchResults({ searchTerm, searchResults, apiError }: S
       {searchResults.episodes.length > 0 && (
         <div className="mb-8">
           <h2 className="text-2xl font-bold mb-6 text-foreground">الحلقات</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             {searchResults.episodes.map((episode: any, index: number) => (
               <AnimatedElement 
                 key={episode._id || episode.trackId} 

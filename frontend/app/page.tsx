@@ -243,30 +243,10 @@ export default async function Home({
             </div>
           </div>
           <div className="h-px w-full bg-white/10"></div>
-          <div className="flex flex-col md:flex-row md:justify-center items-center gap-4 md:gap-6 lg:gap-x-6 py-6 md:py-8 pb-10 md:pb-14 text-xs md:text-sm text-white/60">
+          <div className="flex justify-center items-center py-6 md:py-8 pb-10 md:pb-14 text-xs md:text-sm text-white/60">
             <p className="text-center">
               © 2025 ثمانية للنشر والتوزيع - جميع الحقوق محفوظة.
             </p>
-            <div className="flex items-center gap-3 md:gap-4 lg:gap-6 order-2">
-              <div className="flex flex-wrap items-center gap-3 md:gap-4 lg:gap-6 justify-center">
-                <div className="flex items-center">
-                  <div className="relative group">
-                    <a rel="noopener noreferrer" target="_blank" className="text-white/60 hover:text-white transition-all duration-300 relative z-10 hover:drop-shadow-[0_0_8px_rgba(255,255,255,0.5)]" href="https://company.thmanyah.com/privacy-policy">
-                      سياسة الخصوصية
-                    </a>
-                    <div className="absolute inset-0 bg-white/0 group-hover:bg-white/5 rounded-md blur-sm transition-all duration-300 opacity-0 group-hover:opacity-100 -z-10"></div>
-                  </div>
-                </div>
-                <div className="flex items-center">
-                  <div className="relative group">
-                    <a rel="noopener noreferrer" target="_blank" className="text-white/60 hover:text-white transition-all duration-300 relative z-10 hover:drop-shadow-[0_0_8px_rgba(255,255,255,0.5)]" href="mailto:hala@thmanyah.com">
-                      اتصل بنا
-                    </a>
-                    <div className="absolute inset-0 bg-white/0 group-hover:bg-white/5 rounded-md blur-sm transition-all duration-300 opacity-0 group-hover:opacity-100 -z-10"></div>
-                  </div>
-                </div>
-              </div>
-            </div>
           </div>
         </div>
       </footer>

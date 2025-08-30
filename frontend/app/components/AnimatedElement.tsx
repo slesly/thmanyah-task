@@ -9,6 +9,7 @@ interface AnimatedElementProps {
   animationType?: 'fade-up' | 'fade-scale' | 'fade';
   threshold?: number;
   rootMargin?: string;
+  onClick?: () => void;
 }
 
 export default function AnimatedElement({
@@ -16,7 +17,8 @@ export default function AnimatedElement({
   className = '',
   animationType = 'fade-up',
   threshold = 0.1,
-  rootMargin = '50px'
+  rootMargin = '50px',
+  onClick
 }: AnimatedElementProps) {
   const { elementRef, isIntersecting } = useIntersectionObserver({
     threshold,
@@ -37,6 +39,7 @@ export default function AnimatedElement({
     <div
       ref={elementRef}
       className={`${getAnimationClass()} ${className}`}
+      onClick={onClick}
     >
       {children}
     </div>
