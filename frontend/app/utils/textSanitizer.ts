@@ -15,20 +15,3 @@ export function sanitizeArabicText(text: string): string {
     // Trim whitespace
     .trim();
 }
-
-/**
- * Safely renders text content with hydration warning suppression
- */
-export function SafeText({ children, className = '', ...props }: { 
-  children: string | null | undefined; 
-  className?: string;
-  [key: string]: any;
-}) {
-  const sanitizedText = sanitizeArabicText(children || '');
-  
-  return (
-    <span className={className} suppressHydrationWarning {...props}>
-      {sanitizedText}
-    </span>
-  );
-}
