@@ -37,25 +37,34 @@ export default function SearchForm({ initialSearchTerm = '' }: SearchFormProps) 
     isValidSearch
   } = useSearch(navigateToSearch, 500, 2)
 
-  // Initialize search term from props only once
+  // Initialize search term from props only once and handle page refresh
   useEffect(() => {
-    if (initialSearchTerm && !searchTerm && !isInitialized.current) {
+    if (!isInitialized.current) {
       isInitialized.current = true
-      handleSearchChange(initialSearchTerm)
-      lastNavigatedTerm.current = initialSearchTerm
+      
+      if (initialSearchTerm) {
+        // If there's an initial search term (from URL), set it
+        handleSearchChange(initialSearchTerm)
+        lastNavigatedTerm.current = initialSearchTerm
+      } else {
+        // If no initial search term, clear everything
+        clearSearch()
+        lastNavigatedTerm.current = ''
+      }
     }
-  }, [initialSearchTerm, searchTerm, handleSearchChange])
+  }, [initialSearchTerm, handleSearchChange, clearSearch])
 
   const handleInputChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value
     handleSearchChange(value)
     
-    // If input is cleared, navigate to home
+    // If input is cleared, immediately clear and navigate to home
     if (!value.trim()) {
+      clearSearch()
       lastNavigatedTerm.current = ''
       router.push('/')
     }
-  }, [handleSearchChange, router])
+  }, [handleSearchChange, clearSearch, router])
 
   const handleSubmit = useCallback((e: React.FormEvent) => {
     e.preventDefault()
@@ -78,8 +87,8 @@ export default function SearchForm({ initialSearchTerm = '' }: SearchFormProps) 
     router.push('/')
   }, [clearSearch, router])
 
-  // Show loading state when typing
-  const showLoading = isTyping
+  // Show loading state when typing and there's a valid search term
+  const showLoading = isTyping && searchTerm.trim().length >= 2
 
   return (
     <div className="max-w-3xl mx-auto">
@@ -93,6 +102,7 @@ export default function SearchForm({ initialSearchTerm = '' }: SearchFormProps) 
             placeholder="ابحث في أكثر من 70 مليون بودكاست وحلقة"
             className="w-full px-4 py-3 text-center border border-light-300 bg-white text-foreground rounded-lg text-base outline-none transition-all duration-200 placeholder:text-light-400 focus:border-accent-blue focus:text-foreground focus:placeholder:text-transparent focus:bg-white focus:ring-2 focus:ring-accent-blue/20"
             autoComplete="off"
+            suppressHydrationWarning
           />
           <div className="absolute inset-y-0 left-3 flex items-center pointer-events-none">
             <svg className="w-4 h-4 text-light-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -141,7 +151,7 @@ export default function SearchForm({ initialSearchTerm = '' }: SearchFormProps) 
         
         {/* Status indicator */}
         <div className="mt-3 text-center">
-          {isTyping && isValidSearch && (
+          {showLoading && (
             <p className="text-sm text-light-500 animate-pulse">
               جاري البحث عن "{searchTerm}"...
             </p>
@@ -153,13 +163,6 @@ export default function SearchForm({ initialSearchTerm = '' }: SearchFormProps) 
           )}
         </div>
       </form>
-      
-      {/* Search tips */}
-      <div className="mt-4 text-center">
-        <p className="text-light-400 text-xs">
-          اكتب للبحث التلقائي • اضغط Enter للبحث الفوري
-        </p>
-      </div>
     </div>
   )
 } 

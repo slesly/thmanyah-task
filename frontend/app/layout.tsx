@@ -36,7 +36,7 @@ export default function RootLayout({
       <head>
         <meta name="color-scheme" content="light" />
       </head>
-      <body className="font-ibm-plex-sans-arabic antialiased">
+      <body className="font-ibm-plex-sans-arabic antialiased" suppressHydrationWarning>
         <div id="__next">
           {children}
         </div>

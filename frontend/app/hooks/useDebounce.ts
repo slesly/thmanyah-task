@@ -39,6 +39,7 @@ export function useSearch(
   const debouncedSearchTerm = useDebounce(searchTerm, delay)
   const lastSearchedTerm = useRef<string>('')
   const isInitialized = useRef(false)
+  const isInitialLoad = useRef(true)
 
   // Memoize the onSearch callback to prevent infinite loops
   const memoizedOnSearch = useCallback(onSearch, [])
@@ -47,6 +48,12 @@ export function useSearch(
   useEffect(() => {
     const trimmedTerm = debouncedSearchTerm.trim()
     
+    // Skip search on initial load to prevent unwanted searches
+    if (isInitialLoad.current) {
+      isInitialLoad.current = false
+      return
+    }
+
     // Only search if:
     // 1. Term has minimum length
     // 2. Term is different from last searched term
@@ -59,6 +66,10 @@ export function useSearch(
       lastSearchedTerm.current = trimmedTerm
       memoizedOnSearch(trimmedTerm)
       setIsTyping(false)
+    } else if (trimmedTerm.length === 0) {
+      // If term is empty, reset typing state and last searched term
+      setIsTyping(false)
+      lastSearchedTerm.current = ''
     }
   }, [debouncedSearchTerm, memoizedOnSearch, minLength])
 
@@ -69,7 +80,12 @@ export function useSearch(
 
   const handleSearchChange = useCallback((value: string) => {
     setSearchTerm(value)
-    setIsTyping(true)
+    // Only set typing to true if there's actual content
+    if (value.trim().length > 0) {
+      setIsTyping(true)
+    } else {
+      setIsTyping(false)
+    }
   }, [])
 
   const handleSearchSubmit = useCallback((value: string) => {

@@ -71,7 +71,6 @@ export class SearchService {
 
   async testDatabaseConnection(): Promise<boolean> {
     try {
-      // Simple query to test database connection
       await this.podcastRepository.query('SELECT 1');
       return true;
     } catch (error) {
@@ -89,7 +88,7 @@ export class SearchService {
           params: {
             term: searchTerm,
             media: 'podcast',
-            entity: 'podcast', // Search for podcasts only
+            entity: 'podcast',
             limit: 25,
           },
         },
@@ -102,7 +101,7 @@ export class SearchService {
           params: {
             term: searchTerm,
             media: 'podcast',
-            entity: 'podcastEpisode', // Search for episodes only
+            entity: 'podcastEpisode',
             limit: 25,
           },
         },
@@ -115,32 +114,33 @@ export class SearchService {
       const savedPodcasts: Podcast[] = [];
       
       for (const podcast of podcasts) {
-        // Skip podcasts without required fields
         if (!podcast.trackId || !podcast.trackName) {
           continue;
         }
 
-        const existingPodcast = await this.podcastRepository.findOne({
-          where: { trackId: podcast.trackId },
-        });
+        try {
+          const existingPodcast = await this.podcastRepository.findOne({
+            where: { trackId: podcast.trackId },
+          });
 
-        if (existingPodcast) {
-          // Update existing podcast
-          Object.assign(existingPodcast, {
-            ...podcast,
-            searchTerm,
-            updatedAt: new Date(),
-          });
-          await this.podcastRepository.save(existingPodcast);
-          savedPodcasts.push(existingPodcast);
-        } else {
-          // Create new podcast
-          const newPodcast = this.podcastRepository.create({
-            ...podcast,
-            searchTerm,
-          });
-          const savedPodcast = await this.podcastRepository.save(newPodcast);
-          savedPodcasts.push(savedPodcast);
+          if (existingPodcast) {
+            Object.assign(existingPodcast, {
+              ...podcast,
+              searchTerm,
+              updatedAt: new Date(),
+            });
+            const updatedPodcast = await this.podcastRepository.save(existingPodcast);
+            savedPodcasts.push(updatedPodcast);
+          } else {
+            const newPodcast = this.podcastRepository.create({
+              ...podcast,
+              searchTerm,
+            });
+            const savedPodcast = await this.podcastRepository.save(newPodcast);
+            savedPodcasts.push(savedPodcast);
+          }
+        } catch (error) {
+          console.error(`Error saving podcast ${podcast.trackName}:`, error);
         }
       }
 
@@ -148,32 +148,33 @@ export class SearchService {
       const savedEpisodes: Episode[] = [];
 
       for (const episode of episodes) {
-        // Skip episodes without required fields
         if (!episode.trackId || !episode.trackName) {
           continue;
         }
 
-        const existingEpisode = await this.episodeRepository.findOne({
-          where: { trackId: episode.trackId },
-        });
+        try {
+          const existingEpisode = await this.episodeRepository.findOne({
+            where: { trackId: episode.trackId },
+          });
 
-        if (existingEpisode) {
-          // Update existing episode
-          Object.assign(existingEpisode, {
-            ...episode,
-            searchTerm,
-            updatedAt: new Date(),
-          });
-          await this.episodeRepository.save(existingEpisode);
-          savedEpisodes.push(existingEpisode);
-        } else {
-          // Create new episode
-          const newEpisode = this.episodeRepository.create({
-            ...episode,
-            searchTerm,
-          });
-          const savedEpisode = await this.episodeRepository.save(newEpisode);
-          savedEpisodes.push(savedEpisode);
+          if (existingEpisode) {
+            Object.assign(existingEpisode, {
+              ...episode,
+              searchTerm,
+              updatedAt: new Date(),
+            });
+            const updatedEpisode = await this.episodeRepository.save(existingEpisode);
+            savedEpisodes.push(updatedEpisode);
+          } else {
+            const newEpisode = this.episodeRepository.create({
+              ...episode,
+              searchTerm,
+            });
+            const savedEpisode = await this.episodeRepository.save(newEpisode);
+            savedEpisodes.push(savedEpisode);
+          }
+        } catch (error) {
+          console.error(`Error saving episode ${episode.trackName}:`, error);
         }
       }
 
@@ -198,40 +199,86 @@ export class SearchService {
       };
     } catch (error) {
       console.error('Error searching podcasts:', error);
-      throw new Error('Failed to search podcasts');
+      throw new Error(`Failed to search podcasts: ${error.message}`);
     }
   }
 
   async getRecentSearches(): Promise<SearchResponse> {
-    const podcasts = await this.podcastRepository.find({
-      order: { createdAt: 'DESC' },
-      take: 20,
-    });
+    try {
+      // Get the most recent search term from both podcasts and episodes
+      const mostRecentPodcastSearch = await this.podcastRepository.find({
+        order: { createdAt: 'DESC' },
+        take: 1
+      });
 
-    const episodes = await this.episodeRepository.find({
-      order: { createdAt: 'DESC' },
-      take: 20,
-    });
+      const mostRecentEpisodeSearch = await this.episodeRepository.find({
+        order: { createdAt: 'DESC' },
+        take: 1
+      });
 
-    // Transform data to match frontend expectations
-    const transformedPodcasts = podcasts.map(podcast => ({
-      ...podcast,
-      _id: podcast.id.toString(),
-      kind: 'podcast',
-      wrapperType: 'track'
-    }));
+      // Get the actual search terms
+      const podcastSearchTerm = mostRecentPodcastSearch[0]?.searchTerm;
+      const episodeSearchTerm = mostRecentEpisodeSearch[0]?.searchTerm;
+      const podcastTime = mostRecentPodcastSearch[0]?.createdAt;
+      const episodeTime = mostRecentEpisodeSearch[0]?.createdAt;
 
-    const transformedEpisodes = episodes.map(episode => ({
-      ...episode,
-      _id: episode.id.toString(),
-      kind: 'episode',
-      wrapperType: 'track'
-    }));
+      // Determine which search term is more recent
+      let searchTerm = null;
 
-    return {
-      podcasts: transformedPodcasts,
-      episodes: transformedEpisodes,
-    };
+      if (podcastSearchTerm && episodeSearchTerm) {
+        const podcastTimeMs = new Date(podcastTime).getTime();
+        const episodeTimeMs = new Date(episodeTime).getTime();
+
+        if (podcastTimeMs >= episodeTimeMs) {
+          searchTerm = podcastSearchTerm;
+        } else {
+          searchTerm = episodeSearchTerm;
+        }
+      } else if (podcastSearchTerm) {
+        searchTerm = podcastSearchTerm;
+      } else if (episodeSearchTerm) {
+        searchTerm = episodeSearchTerm;
+      }
+
+      if (!searchTerm) {
+        return { podcasts: [], episodes: [] };
+      }
+
+    // Get ALL podcasts for the most recent search term
+      const podcasts = await this.podcastRepository.find({
+        where: { searchTerm },
+        order: { createdAt: 'DESC' },
+      });
+
+      // Get ALL episodes for the most recent search term
+      const episodes = await this.episodeRepository.find({
+        where: { searchTerm },
+        order: { createdAt: 'DESC' },
+      });
+
+      // Transform data to match frontend expectations
+      const transformedPodcasts = podcasts.map(podcast => ({
+        ...podcast,
+        _id: podcast.id.toString(),
+        kind: 'podcast',
+        wrapperType: 'track'
+      }));
+
+      const transformedEpisodes = episodes.map(episode => ({
+        ...episode,
+        _id: episode.id.toString(),
+        kind: 'episode',
+        wrapperType: 'track'
+      }));
+
+      return {
+        podcasts: transformedPodcasts,
+        episodes: transformedEpisodes,
+      };
+    } catch (error) {
+      console.error('Error getting recent searches:', error);
+      throw new Error(`Failed to get recent searches: ${error.message}`);
+    }
   }
 
   async getPodcastsBySearchTerm(searchTerm: string): Promise<SearchResponse> {

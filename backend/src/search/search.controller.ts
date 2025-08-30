@@ -1,63 +1,54 @@
-import { Controller, Get, Query, HttpException, HttpStatus } from '@nestjs/common';
+import { Controller, Get, Query, Res } from '@nestjs/common';
+import { Response } from 'express';
 import { SearchService } from './search.service';
 
-@Controller()
+@Controller('search')
 export class SearchController {
   constructor(private readonly searchService: SearchService) {}
 
-  @Get('health')
-  async healthCheck() {
+  @Get()
+  async search(@Query('q') query: string, @Res() res: Response) {
     try {
-      // Test database connection
-      await this.searchService.testDatabaseConnection();
-      return {
-        status: 'healthy',
-        timestamp: new Date().toISOString(),
-        database: 'connected',
-        environment: process.env.NODE_ENV || 'development',
-        apiUrl: process.env.API_URL || 'not set',
-        allowedOrigins: process.env.ALLOWED_ORIGINS || 'not set'
-      };
-    } catch (error) {
-      throw new HttpException({
-        status: 'unhealthy',
-        timestamp: new Date().toISOString(),
-        database: 'disconnected',
-        error: error.message,
-        environment: process.env.NODE_ENV || 'development',
-        apiUrl: process.env.API_URL || 'not set',
-        allowedOrigins: process.env.ALLOWED_ORIGINS || 'not set'
-      }, HttpStatus.SERVICE_UNAVAILABLE);
-    }
-  }
+      if (!query) {
+        return res.status(400).json({ error: 'Query parameter "q" is required' });
+      }
 
-  @Get('search')
-  async searchPodcasts(@Query('q') searchTerm: string) {
-    if (!searchTerm || searchTerm.trim() === '') {
-      throw new HttpException('Search term is required', HttpStatus.BAD_REQUEST);
-    }
-
-    try {
-      console.log(`Searching for: "${searchTerm}"`);
-      const result = await this.searchService.searchPodcasts(searchTerm.trim());
-      console.log(`Found ${result.podcasts.length} podcasts and ${result.episodes.length} episodes`);
-      return result;
+      const result = await this.searchService.searchPodcasts(query);
+      res.json(result);
     } catch (error) {
       console.error('Search error:', error);
-      throw new HttpException(`Failed to search podcasts: ${error.message}`, HttpStatus.INTERNAL_SERVER_ERROR);
+      res.status(500).json({ error: error.message });
     }
   }
 
   @Get('recent')
-  async getRecentSearches() {
+  async getRecentSearches(@Res() res: Response) {
     try {
-      console.log('Fetching recent searches');
       const result = await this.searchService.getRecentSearches();
-      console.log(`Found ${result.podcasts.length} recent podcasts and ${result.episodes.length} recent episodes`);
-      return result;
+      res.json(result);
     } catch (error) {
       console.error('Recent searches error:', error);
-      throw new HttpException(`Failed to get recent searches: ${error.message}`, HttpStatus.INTERNAL_SERVER_ERROR);
+      res.status(500).json({ error: error.message });
+    }
+  }
+
+  @Get('health')
+  async healthCheck(@Res() res: Response) {
+    try {
+      const isConnected = await this.searchService.testDatabaseConnection();
+      res.json({
+        status: 'ok',
+        database: isConnected ? 'connected' : 'disconnected',
+        timestamp: new Date().toISOString()
+      });
+    } catch (error) {
+      console.error('Health check error:', error);
+      res.status(500).json({
+        status: 'error',
+        database: 'disconnected',
+        error: error.message,
+        timestamp: new Date().toISOString()
+      });
     }
   }
 } 

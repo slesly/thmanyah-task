@@ -17,7 +17,7 @@ import { Episode } from './entities/episode.entity';
       port: parseInt(process.env.DB_PORT) || 5432,
       username: process.env.DB_USERNAME || 'postgres',
       password: process.env.DB_PASSWORD || 'password',
-      database: process.env.DB_DATABASE || 'thmanyahdb',
+      database: process.env.DB_DATABASE || 'thmanyah_db',
       entities: [Podcast, Episode],
       synchronize: true, // Enable for first deployment
       logging: process.env.NODE_ENV === 'development',
