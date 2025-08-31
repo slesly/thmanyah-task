@@ -249,7 +249,7 @@ body {
     flex-direction: column;
     justify-content: space-between;
     height: 104px;
-    max-width: calc(100% - 144px);
+    max-width: calc(100% - 104px);
   }
 
   .episode-link-thmanyah {
@@ -273,7 +273,7 @@ body {
     font-size: 0.875rem;
     color: hsl(0 0% 98% / 0.75);
     line-height: 1.4;
-    height: 2.8rem; /* 2 lines * 1.4 line-height */
+    height: 2.6rem; /* 2 lines * 1.4 line-height */
     overflow: hidden;
     display: -webkit-box;
     -webkit-line-clamp: 2;
@@ -311,6 +311,10 @@ body {
   .episode-date-text {
     font-size: 0.875rem;
     color: hsl(0 0% 98% / 0.6);
+      white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 176px;
   }
 
   .episode-date {
@@ -438,6 +442,9 @@ body {
 
 /* ===== RESPONSIVE DESIGN ===== */
 @media (min-width: 768px) {
+  .episode-card-content-thmanyah {
+    max-width: calc(100% - 144px);
+  }
   .episode-card-image-container {
     flex: 0 0 144px;
   }
@@ -491,6 +498,10 @@ body {
     flex: 0 0 80px;
     padding: 0 4px;
   }
+
+  .episode-card-content-thmanyah {
+    max-width: calc(100% - 80px);
+  }
   
   .episode-title-thmanyah {
     font-size: 0.875rem;
@@ -541,6 +552,10 @@ body {
     flex: 0 0 70px;
     padding: 0 2px;
   }
+
+  .episode-card-content-thmanyah {
+    max-width: calc(100% - 70px);
+  }
   
   .episode-title-thmanyah {
     font-size: 0.8rem;
@@ -549,7 +564,7 @@ body {
   
   .episode-description-thmanyah {
     font-size: 0.7rem;
-    height: 2.4rem; /* 2 lines * 1.2 line-height */
+    height: 2rem; /* 2 lines * 1.2 line-height */
   }
 }
 
@@ -563,6 +578,7 @@ body {
     width: 12rem;
     height: 6.75rem;
   }
+  
   
   .podcast-card-title {
     font-size: 0.8rem;
